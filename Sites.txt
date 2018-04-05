@@ -1,3 +1,5 @@
 https://marcobonzanini.com/2015/03/02/mining-twitter-data-with-python-part-1/
 
 https://sahilsehwag.wordpress.com/2017/08/22/twitter-mining-using-tweepy/
+
+http://pythonforengineers.com/build-a-twitter-analytics-app-using-python/
