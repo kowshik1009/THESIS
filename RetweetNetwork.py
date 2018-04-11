@@ -34,20 +34,19 @@ api=tweepy.API(auth)
 
 graph=nx.DiGraph()
 username='ReallySwara'
-central_node=graph.add_node(api.get_user(username))
+central_node=graph.add_node(username)
+who_all_retweeted=[]
 
 statuses=api.user_timeline(username, include_rts=True)
 for tweet in statuses:
 ##    print(tweet.text)
 ##    print("reweeted by:")
-    who_all_retweeted=api.retweeters(tweet.id)
-    for single_retweeter in who_all_retweeted:
+    who_all_retweeted.extend(api.retweeters(tweet.id))
+for single_retweeter in who_all_retweeted:
 ##        print(api.get_user(single_retweeter).screen_name)
-        peripheral_node=api.get_user(single_retweeter)
-        graph.add_edge(peripheral_node,central_node)
-    
-##    print("\n")
+    graph.add_edge(api.get_user(single_retweeter).screen_name,central_node)
 
-nx.draw(graph)
+pos = nx.spring_layout(graph,k=5.0,iterations=20)
+nx.draw(graph,pos, with_labels=True, font_size=5, node_size=50)
 pyplot.show()
-nx.info(graph)
+    
