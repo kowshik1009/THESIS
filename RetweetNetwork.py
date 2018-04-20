@@ -36,15 +36,20 @@ graph=nx.DiGraph()
 username='ReallySwara'
 central_node=graph.add_node(username)
 who_all_retweeted=[]
+whom_the_user_retweeted=[]
 
 statuses=api.user_timeline(username, include_rts=True)
 for tweet in statuses:
-##    print(tweet.text)
-##    print("reweeted by:")
-    who_all_retweeted.extend(api.retweeters(tweet.id))
-for single_retweeter in who_all_retweeted:
+    if hasattr(tweet, 'retweeted_status'):
+        whom_the_user_retweeted.append(tweet.retweeted_status.author.screen_name)
+    else:
+        who_all_retweeted.extend(api.retweeters(tweet.id))
+for single_retweeter in set(who_all_retweeted):
 ##        print(api.get_user(single_retweeter).screen_name)
     graph.add_edge(api.get_user(single_retweeter).screen_name,central_node)
+
+for user in set(whom_the_user_retweeted):
+    graph.add_edge(central_node,user)
 
 pos = nx.spring_layout(graph,k=5.0,iterations=20)
 nx.draw(graph,pos, with_labels=True, font_size=5, node_size=50)
